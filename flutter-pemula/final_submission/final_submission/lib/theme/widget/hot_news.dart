@@ -4,6 +4,8 @@ import 'package:final_submission/model/article_response.dart';
 import 'package:final_submission/theme/common/custom_widget.dart';
 import 'package:final_submission/view/detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:final_submission/theme/common/setup.dart' as Style;
+import 'package:timeago/timeago.dart' as timeago;
 
 class HotNewsWidget extends StatefulWidget {
   @override
@@ -115,10 +117,46 @@ class _HotNewsWidgetState extends State<HotNewsWidget> {
                               left: 10.0, right: 10.0, top: 15.0, bottom: 15.0),
                           child: Text(
                             articles[index].title,
-                            textAlign: TextStyle.,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: TextStyle(height: 1.3, fontSize: 15.0),
                           ),
                         ),
-
+                        Stack(
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            Container(
+                              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                              width: 180.0,
+                              height: 1.0,
+                              color: Colors.black12,
+                            ),
+                            Container(
+                              width: 30,
+                              height: 3.0,
+                              color: Style.Colors.mainColor,
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                articles[index].source.name,
+                                style: TextStyle(
+                                    color: Style.Colors.mainColor,
+                                    fontSize: 9.0),
+                              ),
+                              Text(
+                                timeUntil(DateTime.parse(articles[index].date)),
+                                style: TextStyle(
+                                    color: Colors.black45, fontSize: 9.0),
+                              )
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -126,5 +164,9 @@ class _HotNewsWidgetState extends State<HotNewsWidget> {
               );
             }),
       );
+  }
+
+  String timeUntil(DateTime parse) {
+    return timeago.format(parse, allowFromNow: true, locale: 'en');
   }
 }
