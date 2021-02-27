@@ -13,7 +13,7 @@ class SourcesnewsBloc {
     _subject.sink.add(response);
   }
 
-  voiddrainStream() {
+  void drainStream() {
     _subject.value = null;
   }
   @mustCallSuper

@@ -1,9 +1,9 @@
-import 'dart:html';
-
 import 'package:final_submission/model/article.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 import 'package:final_submission/theme/common/setup.dart' as Style;
 
 class DetailScreen extends StatefulWidget {
@@ -16,16 +16,16 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  final ArticleModel articleModel;
+  final ArticleModel article;
 
-  _DetailScreenState(this.articleModel);
+  _DetailScreenState(this.article);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: GestureDetector(
         onTap: () {
-          launch(articleModel.url);
+          launch(article.url);
         },
         child: Container(
           height: 48.0,
@@ -51,9 +51,9 @@ class _DetailScreenState extends State<DetailScreen> {
         elevation: 0.0,
         backgroundColor: Style.Colors.mainColor,
         title: Text(
-          articleModel.title,
+          article.title,
           style: TextStyle(
-              fontSize: Theme.of(context).platform == TargetPlatform.android
+              fontSize: Theme.of(context).platform == TargetPlatform.iOS
                   ? 17.0
                   : 17.0,
               color: Colors.white,
@@ -67,9 +67,9 @@ class _DetailScreenState extends State<DetailScreen> {
             child: FadeInImage.assetNetwork(
               alignment: Alignment.topCenter,
               placeholder: 'assets/img/placeholder.png',
-              image: articleModel.img == null
-                  ? 'http://to-let.com.bd/operator/images/noimage.png'
-                  : articleModel.img,
+              image: article.img == null
+                  ? 'assets/img/placeholder.png'
+                  : article.img,
               fit: BoxFit.cover,
               width: double.maxFinite,
               height: MediaQuery.of(context).size.height * 1 / 3,
@@ -87,7 +87,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      articleModel.date.substring(0, 10),
+                      article.date.substring(0, 10),
                       style: TextStyle(
                           color: Style.Colors.mainColor,
                           fontWeight: FontWeight.bold),
@@ -100,7 +100,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 GestureDetector(
                   onTap: () {},
                   child: Text(
-                    articleModel.title,
+                    article.title,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -111,14 +111,16 @@ class _DetailScreenState extends State<DetailScreen> {
                   height: 10.0,
                 ),
                 Text(
-                  timeUntil(DateTime.parse(articleModel.date)),
+                  timeUntil(DateTime.parse(article.date)),
                   style: TextStyle(color: Colors.grey, fontSize: 12.0),
                 ),
                 SizedBox(
                   height: 5.0,
                 ),
                 Html(
-                  data: articleModel.content,
+                  data: article.content == null
+                      ? 'No Content'
+                      : article.content,
                   renderNewlines: true,
                   defaultTextStyle:
                       TextStyle(fontSize: 14.0, color: Colors.black),
@@ -131,5 +133,7 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  String timeUntil(DateTime parse) {}
+  String timeUntil(DateTime parse) {
+    return timeago.format(parse, allowFromNow: true, locale: 'en');
+  }
 }
